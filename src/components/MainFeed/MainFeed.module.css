@@ -1,0 +1,24 @@
+.mainFeed {
+  margin-bottom: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  padding: 0 15px;
+  background-color: inherit;
+  transition: all 0.5s;
+}
+
+.alignTop {
+  margin-bottom: auto;
+}
+
+@media (max-width: 580px) {
+  .mainFeed {
+    margin-bottom: 80px;
+  }
+  .alignTop {
+    margin-bottom: auto;
+  }
+}

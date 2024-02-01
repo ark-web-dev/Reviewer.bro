@@ -1,0 +1,52 @@
+.searchDropdownWrapper {
+  background: var(--color-dark);
+  border-radius: 0 0 6px 6px;
+  border: 1px solid var(--color-border-default);
+  border-top: none;
+  width: 100%;
+  max-height: 46svh;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 42px;
+  z-index: 10;
+  display: none;
+}
+
+.searchDropdownInner {
+  width: 100%;
+  max-height: 46svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.searchDropdownInner::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.searchDropdownInner::-webkit-scrollbar-thumb {
+  background: var(--color-gray);
+  border-radius: 5px;
+}
+
+.searchDropdownInner::-webkit-scrollbar-track {
+  background-color: transparent;
+  border: none;
+  padding-bottom: 50px;
+}
+
+.searchDropdownInner::-webkit-scrollbar-button {
+  background-color: var(--color-gray);
+  border-radius: 5px;
+}
+
+.searchList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.show {
+  display: block;
+}

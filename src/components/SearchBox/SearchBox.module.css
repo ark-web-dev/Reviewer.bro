@@ -1,0 +1,9 @@
+.searchBox {
+  position: relative;
+  background-color: inherit;
+  margin-bottom: 17px;
+}
+
+.inputFocus {
+  border-radius: 6px 6px 0 0;
+}
