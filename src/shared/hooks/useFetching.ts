@@ -1,21 +1,21 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { ComplexError, CustomError } from '../types/types';
 
-type FetchingData = {
-  fetching: (...args: any) => void;
+type FetchingData<A> = {
+  fetching: (...args: A[]) => void;
   isLoading: boolean;
   error: ComplexError;
   setError: Dispatch<SetStateAction<ComplexError>>;
 };
 
-export const useFetching = (
-  callback: (...args: any) => Promise<void>,
-  loaderDelay: number = 1000
-): FetchingData => {
+export const useFetching = <A>(
+  callback: (...args: A[]) => Promise<void>,
+  loaderDelay: number = 500
+): FetchingData<A> => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ComplexError>(null);
 
-  const fetching = useCallback(async (...args: any) => {
+  const fetching = useCallback(async (...args: A[]) => {
     let timerId: ReturnType<typeof setTimeout>;
 
     try {

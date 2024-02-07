@@ -1,5 +1,3 @@
-export type IBlackList = { [key: string]: boolean };
-
 export type IUser = {
   id: number;
   public_repos: number;
@@ -25,18 +23,17 @@ export type IRepo = {
   owner: { login: string };
 };
 
-export type ISearchEntity = {
-  name: string;
-  login?: string;
-  owner?: { login: string };
-};
+export type ISearchEntity = IRepo | IUser;
 
 export type ISearchListItem = {
   listItemSvgIcon?: Svg;
   onListItemClick: SearchItemOnClickCallback;
 };
 
-export type SearchItemOnClickCallback = (login: string, name: string) => void;
+export type SearchItemOnClickCallback = (
+  name: string,
+  element: ISearchEntity
+) => void;
 
 export type SearchList = ISearchEntity[];
 

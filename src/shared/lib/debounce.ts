@@ -4,7 +4,7 @@ export const debounce = <F extends (...args: any) => unknown>(
 ): ((...args: any) => unknown) => {
   let timeout: ReturnType<typeof setTimeout>;
 
-  const debounced = (...args: any) => {
+  const debounced = function (this: any, ...args: any) {
     let result: unknown;
 
     clearTimeout(timeout);

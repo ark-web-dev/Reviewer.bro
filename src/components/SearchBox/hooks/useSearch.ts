@@ -16,7 +16,7 @@ export const useSearch = (
       const lowerCaseValue = value.toLowerCase();
 
       const filteredData = list.filter((item) => {
-        const targetString = item.login || item.name;
+        const targetString = 'login' in item ? item.login : item.name;
         return targetString.toLowerCase().includes(lowerCaseValue);
       });
 

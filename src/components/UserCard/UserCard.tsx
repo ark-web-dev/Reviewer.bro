@@ -13,6 +13,8 @@ export type UserCardProps = {
 
 export const UserCard: FC<UserCardProps> = memo(
   ({ user, size = 'default' }) => {
+    if (!user) return;
+
     const {
       avatar_url,
       login,

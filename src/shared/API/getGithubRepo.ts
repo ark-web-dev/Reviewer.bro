@@ -1,9 +1,9 @@
 import { APP_API_URL } from './const';
 import { getData } from './getData';
 
-export const getGithubRepo = async (userName: string, repoName: string) => {
+export const getGithubRepo = async (userLogin: string, repoName: string) => {
   const response = await getData(
-    `${APP_API_URL}/repos/${userName}/${repoName}`
+    `${APP_API_URL}/repos/${userLogin}/${repoName}`
   );
 
   return response;
