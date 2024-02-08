@@ -8,7 +8,7 @@ export const useBlackListMetaData = (
   addContributor: (user: IUser) => void,
   removeContributor: (user: IUser) => void
 ) => {
-  const [blackList, setBlackList] = useState<IUser[] | null>(null);
+  const [blackList, setBlackList] = useState<IUser[] | null>([]);
 
   useAppStorage({
     key: 'current-blacklist',
