@@ -8,18 +8,18 @@ export const useBlackListMetaData = (
   addContributor: (user: IUser) => void,
   removeContributor: (user: IUser) => void
 ) => {
-  const [blackList, setBlackList] = useState<IUser[] | null>([]);
+  const [blackList, setBlackList] = useState<IUser[]>([]);
 
   useAppStorage({
     key: 'current-blacklist',
     setState: setBlackList,
   });
 
-  useOnCurrentRepoChange('current-blacklist', () => setBlackList(null));
+  useOnCurrentRepoChange('current-blacklist', () => setBlackList([]));
 
   const addBlackListItem = useCallback((user: IUser) => {
     setBlackList((prevList) => {
-      const newList = [...(prevList || []), user];
+      const newList = [...prevList, user];
       setLocalStorage('current-blacklist', newList);
       return newList;
     });
@@ -30,7 +30,7 @@ export const useBlackListMetaData = (
   const removeBlackListItem = (user: IUser) => {
     setBlackList((prevList) => {
       const newList =
-        prevList?.filter((currentUser) => currentUser.login !== user.login) ||
+        prevList.filter((currentUser) => currentUser.login !== user.login) ||
         [];
       setLocalStorage('current-blacklist', newList);
       return newList;
