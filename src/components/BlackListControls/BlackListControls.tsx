@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styles from './BlackListControls.module.css';
 import CloseIcon from '@/shared/assets/icons/close-icon.svg?react';
 import groupIcon from '@/shared/assets/icons/group-icon.svg?react';
@@ -11,14 +11,16 @@ import { useBlackListMetaData } from './hooks/useBlackListMetaData';
 
 export interface BlackListControlsProps {
   contributors: IUser[];
-  setContributors: Dispatch<SetStateAction<IUser[] | null>>;
+  addContributor: (user: IUser) => void;
+  removeContributor: (user: IUser) => void;
 }
 
 export const BlackListControls: React.FC<BlackListControlsProps> = ({
   contributors,
-  setContributors,
+  addContributor,
+  removeContributor,
 }) => {
-  const blackList = useBlackListMetaData(setContributors);
+  const blackList = useBlackListMetaData(addContributor, removeContributor);
 
   return (
     <>
@@ -38,7 +40,7 @@ export const BlackListControls: React.FC<BlackListControlsProps> = ({
               <Icon
                 Svg={CloseIcon}
                 clickable
-                onClick={() => blackList.delete(item)}
+                onClick={() => blackList.remove(item)}
                 width={15}
                 height={15}
               />

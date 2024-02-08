@@ -26,12 +26,25 @@ export const useContributorsMetaData = () => {
     )
   );
 
+  const addContributor = (user: IUser) => {
+    setContributors((prevList) => prevList && [...prevList, user]);
+  };
+
+  const removeContributor = (user: IUser) => {
+    setContributors(
+      (prevList) =>
+        prevList &&
+        prevList?.filter((currentUser) => currentUser.login !== user.login)
+    );
+  };
+
   return {
     items: contributors,
     isLoading: contributorsFetchingData.isLoading,
     error: contributorsFetchingData.error,
 
     fetching: contributorsFetchingData.fetching,
-    set: setContributors,
+    add: addContributor,
+    remove: removeContributor,
   };
 };

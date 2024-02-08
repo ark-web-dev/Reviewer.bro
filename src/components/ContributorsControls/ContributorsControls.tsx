@@ -16,7 +16,8 @@ export const ContributorsControls: React.FC = memo(() => {
       error={contributors.error}>
       <BlackListControls
         contributors={contributors.items}
-        setContributors={contributors.set}
+        addContributor={contributors.add}
+        removeContributor={contributors.remove}
       />
 
       <RandomReviewer contributors={contributors.items} />

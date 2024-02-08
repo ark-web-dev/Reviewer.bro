@@ -1,11 +1,12 @@
 import { setLocalStorage } from '@/shared/lib';
 import { IUser } from '@/shared/types/types';
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback } from 'react';
 import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
 import { useAppStorage } from '@/shared/hooks/useAppStorage';
 
 export const useBlackListMetaData = (
-  setContributors: Dispatch<SetStateAction<IUser[] | null>>
+  addContributor: (user: IUser) => void,
+  removeContributor: (user: IUser) => void
 ) => {
   const [blackList, setBlackList] = useState<IUser[] | null>(null);
 
@@ -23,14 +24,10 @@ export const useBlackListMetaData = (
       return newList;
     });
 
-    setContributors(
-      (prevList) =>
-        prevList &&
-        prevList?.filter((currentUser) => currentUser.login !== user.login)
-    );
+    removeContributor(user);
   }, []);
 
-  const deleteBlackListItem = (user: IUser) => {
+  const removeBlackListItem = (user: IUser) => {
     setBlackList((prevList) => {
       const newList =
         prevList?.filter((currentUser) => currentUser.login !== user.login) ||
@@ -39,12 +36,12 @@ export const useBlackListMetaData = (
       return newList;
     });
 
-    setContributors((prevList) => prevList && [...prevList, user]);
+    addContributor(user);
   };
 
   return {
     items: blackList || [],
     add: addBlackListItem,
-    delete: deleteBlackListItem,
+    remove: removeBlackListItem,
   };
 };
