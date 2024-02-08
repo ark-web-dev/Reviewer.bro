@@ -29,9 +29,9 @@ export const useBlackListMetaData = (
 
   const removeBlackListItem = (user: IUser) => {
     setBlackList((prevList) => {
-      const newList =
-        prevList.filter((currentUser) => currentUser.login !== user.login) ||
-        [];
+      const newList = prevList.filter(
+        (currentUser) => currentUser.login !== user.login
+      );
       setLocalStorage('current-blacklist', newList);
       return newList;
     });

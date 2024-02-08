@@ -21,10 +21,10 @@ export const useAppStorage = <T>({
     const currentValue = getLocalStorage<T>(key);
 
     if (
-      (currentValue && !previousUser) ||
-      currentUser?.login === previousUser?.login
+      currentValue &&
+      (!previousUser || currentUser?.login === previousUser?.login)
     ) {
-      setState(currentValue!);
+      setState(currentValue);
     } else {
       ifNotFromStorage?.();
     }
