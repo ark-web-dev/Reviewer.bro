@@ -1,4 +1,3 @@
-import { generateId } from '@/shared/lib';
 import { SearchList, ISearchListItem } from '@/shared/types/types';
 import { ShowMessage } from '@/shared/ui-components';
 import classNames from 'classnames';
@@ -26,7 +25,7 @@ export const SearchDropdown: React.FC<
           {searchList.length > 0 ? (
             searchList.map((element) => (
               <SearchListItem
-                key={generateId()}
+                key={element.id}
                 element={element}
                 listItemSvgIcon={listItemSvgIcon}
                 onListItemClick={onListItemClick}

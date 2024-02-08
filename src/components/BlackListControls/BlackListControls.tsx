@@ -3,7 +3,6 @@ import styles from './BlackListControls.module.css';
 import CloseIcon from '@/shared/assets/icons/close-icon.svg?react';
 import groupIcon from '@/shared/assets/icons/group-icon.svg?react';
 import userIcon from '@/shared/assets/icons/user-icon.svg?react';
-import { generateId } from '@/shared/lib';
 import { Icon } from '@/shared/ui-components';
 import { SearchBox } from '../SearchBox/SearchBox';
 import { IUser } from '@/shared/types/types';
@@ -35,7 +34,7 @@ export const BlackListControls: React.FC<BlackListControlsProps> = ({
       {blackList.items.length > 0 && (
         <ul className={styles.blackList}>
           {blackList.items.map((item) => (
-            <li key={generateId()} className={styles.blackListItem}>
+            <li key={item.id} className={styles.blackListItem}>
               {item.login}
               <Icon
                 Svg={CloseIcon}
