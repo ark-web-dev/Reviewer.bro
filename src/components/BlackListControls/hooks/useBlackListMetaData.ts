@@ -40,7 +40,7 @@ export const useBlackListMetaData = (
   };
 
   return {
-    items: blackList || [],
+    items: blackList,
     add: addBlackListItem,
     remove: removeBlackListItem,
   };

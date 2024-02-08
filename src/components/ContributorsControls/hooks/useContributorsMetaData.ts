@@ -34,7 +34,7 @@ export const useContributorsMetaData = () => {
     setContributors(
       (prevList) =>
         prevList &&
-        prevList?.filter((currentUser) => currentUser.login !== user.login)
+        prevList.filter((currentUser) => currentUser.login !== user.login)
     );
   };
 
