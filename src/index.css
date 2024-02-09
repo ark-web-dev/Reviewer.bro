@@ -1,0 +1,82 @@
+:root {
+  --color-accent: #2f81f7;
+  --color-light: rgba(255, 255, 255, 0.87);
+  --color-dark: #0d1117;
+  --color-dark-extra: #010409;
+  --color-gray: #9d9b9bde;
+  --color-red: #e93535;
+  --color-green: #4ae34a;
+  --color-border-default: #30363d;
+  --color-border-muted: #21262d;
+  --color-fg-muted: #848d97;
+  --color-fg-subtle: #6e7681;
+  --color-fg-default: #e6edf3;
+  --color-action-list-item-default-hover-bg: rgba(177, 186, 196, 0.12);
+  --color-btn-hover-border: #8b949e;
+
+  --background-gradient-white: -webkit-linear-gradient(#fff 30%, #0d1117);
+  --background-gradient-accent: -webkit-linear-gradient(
+    var(--color-accent) 30%,
+    #0d1117
+  );
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--color-light);
+  background-color: var(--color-dark);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: Product;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./shared/assets/fonts/ProductSans-Regular.woff2') format('woff2');
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: inherit;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font: 14px/1.4 Arial, sans-serif;
+  color: var(--color-light);
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+svg {
+  display: inline-block;
+  fill: currentColor;
+  -webkit-transition: fill 0.3s;
+  transition: fill 0.3s;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+img {
+  max-width: 100%;
+}

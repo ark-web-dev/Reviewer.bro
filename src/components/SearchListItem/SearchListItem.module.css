@@ -1,0 +1,15 @@
+.searchListItem {
+  padding: 4px 10px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.searchListItem:hover {
+  background-color: var(--color-action-list-item-default-hover-bg);
+}
+
+.icon {
+  margin-right: 12px;
+  color: var(--color-fg-muted);
+}
