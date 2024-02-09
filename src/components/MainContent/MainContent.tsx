@@ -1,8 +1,7 @@
 import styles from './MainContent.module.css';
-import { FC, memo } from 'react';
 import { MainFeed } from '../MainFeed/MainFeed';
 
-export const MainContent: FC = memo(() => {
+export const MainContent: React.FC = () => {
   return (
     <main className={styles.mainContent}>
       <h2 className={styles.mainTitle}>
@@ -12,4 +11,4 @@ export const MainContent: FC = memo(() => {
       <MainFeed />
     </main>
   );
-});
+};

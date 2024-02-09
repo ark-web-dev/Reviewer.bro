@@ -3,19 +3,18 @@ import { Icon } from '@/shared/ui-components';
 import styles from './SearchListItem.module.css';
 
 export type SearchListItemProps = {
-  item: ISearchEntity;
+  element: ISearchEntity;
 };
 
 export const SearchListItem: React.FC<
   SearchListItemProps & ISearchListItem
-> = ({ item, listItemSvgIcon, onListItemClick }) => {
-  const name: string = item.login ? item.login : item.name;
-  const login: string = item.login ? item.login : item.owner!.login;
+> = ({ element, listItemSvgIcon, onListItemClick }) => {
+  const name: string = 'login' in element ? element.login : element.name;
 
   return (
     <li
       className={styles.searchListItem}
-      onClick={() => onListItemClick?.(name, login)}>
+      onClick={() => onListItemClick?.(name, element)}>
       {listItemSvgIcon && (
         <Icon
           Svg={listItemSvgIcon}

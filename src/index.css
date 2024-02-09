@@ -4,8 +4,6 @@
   --color-dark: #0d1117;
   --color-dark-extra: #010409;
   --color-gray: #9d9b9bde;
-  --color-gray-dark: #464646;
-  --color-gray-light: #e3e3e3be;
   --color-red: #e93535;
   --color-green: #4ae34a;
   --color-border-default: #30363d;
@@ -21,7 +19,6 @@
     var(--color-accent) 30%,
     #0d1117
   );
-  --background-gradient-light: -webkit-linear-gradient(#eee, #333);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -82,16 +79,4 @@ h1 {
 
 img {
   max-width: 100%;
-}
-
-.dangerColor {
-  color: var(--color-red);
-}
-
-.successColor {
-  color: var(--color-green);
-}
-
-.defaultColor {
-  color: var(--color-gray-light);
 }

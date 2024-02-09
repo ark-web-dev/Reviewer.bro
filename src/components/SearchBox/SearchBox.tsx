@@ -1,8 +1,13 @@
 import { useOnClickOutside } from '@/shared/hooks/useOnClickOutside';
-import { SearchList, Svg, ISearchListItem } from '@/shared/types/types';
+import {
+  SearchList,
+  Svg,
+  ISearchListItem,
+  ISearchEntity,
+} from '@/shared/types/types';
 import { Input } from '@/shared/ui-components';
 import classNames from 'classnames';
-import { memo, useState, useRef, useCallback, useLayoutEffect } from 'react';
+import { memo, useState, useRef, useEffect } from 'react';
 import { SearchDropdown } from '../SearchDropdown/SearchDropdown';
 import styles from './SearchBox.module.css';
 import { useSearch } from './hooks/useSearch';
@@ -26,13 +31,7 @@ export const SearchBox: React.FC<SearchBoxProps & ISearchListItem> = memo(
     const refSearchBox = useRef<HTMLDivElement | null>(null);
     const [searchResults, getSearchResults] = useSearch(searchList);
 
-    const onListItemClickMemo = useCallback((name: string, login: string) => {
-      setInputValue(name);
-      setIsDropdownVisible(false);
-      onListItemClick?.(name, login);
-    }, []);
-
-    useLayoutEffect(() => setInputValue(''), [searchList]);
+    useEffect(() => setInputValue(''), [searchList]);
     useOnClickOutside(refSearchBox, () => setIsDropdownVisible(false));
 
     return (
@@ -55,7 +54,11 @@ export const SearchBox: React.FC<SearchBoxProps & ISearchListItem> = memo(
         <SearchDropdown
           isVisible={isDropdownVisible}
           searchList={searchResults}
-          onListItemClick={onListItemClickMemo}
+          onListItemClick={(name: string, element: ISearchEntity) => {
+            setInputValue(name);
+            setIsDropdownVisible(false);
+            onListItemClick?.(name, element);
+          }}
           listItemSvgIcon={listItemSvgIcon}
         />
       </div>

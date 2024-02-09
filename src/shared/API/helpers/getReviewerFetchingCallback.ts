@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 import { getGithubUser } from '..';
 import { setLocalStorage } from '@/shared/lib';
+import { IUser } from '@/shared/types/types';
 
 export const getReviewerFetchingCallback =
-  <T>(setReviewer: Dispatch<SetStateAction<T | null>>) =>
+  (setReviewer: Dispatch<SetStateAction<IUser | null>>) =>
   async (login: string) => {
     let userInfo = null;
 

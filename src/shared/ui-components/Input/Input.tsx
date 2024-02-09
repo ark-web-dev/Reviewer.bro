@@ -8,6 +8,7 @@ type InputProps = {
   className?: string;
   value?: string;
   onChangeCallback?: (value: string) => void;
+  onEnterDownCallback?: (value: string) => void;
   onFocusCallback?: (value: string) => void;
   icon?: Svg;
 } & React.InputHTMLAttributes<HTMLInputElement>;
@@ -18,6 +19,7 @@ export const Input: React.FC<InputProps> = ({
   icon,
   onFocusCallback,
   onChangeCallback,
+  onEnterDownCallback,
   ...otherProps
 }) => {
   const [isFocus, setIsFocus] = useState(false);
@@ -37,16 +39,19 @@ export const Input: React.FC<InputProps> = ({
           className
         )}
         value={value}
-        onFocus={(e: React.ChangeEvent<HTMLInputElement>) => {
+        onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
           setIsFocus(true);
           onFocusCallback?.(e.target.value);
         }}
-        onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
           if (!e.target.value.length) setIsFocus(false);
         }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           onChangeCallback?.(e.target.value)
         }
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.code === 'Enter') onEnterDownCallback?.(e.currentTarget.value);
+        }}
         {...otherProps}
       />
     </div>

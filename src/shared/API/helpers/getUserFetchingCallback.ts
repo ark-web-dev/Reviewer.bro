@@ -1,38 +1,26 @@
-import { ComplexError } from '@/shared/types/types';
 import { Dispatch, SetStateAction } from 'react';
 import { getGithubUser } from '..';
-import { setLocalStorage } from '@/shared/lib';
+import { getLocalStorage, setLocalStorage } from '@/shared/lib';
+import { IUser } from '@/shared/types/types';
 
 export const getUserFetchingCallback =
-  <U, R, C>(
-    setUser: Dispatch<SetStateAction<U | null>>,
-    setRepos: Dispatch<SetStateAction<R | null>>,
-    setContributors: Dispatch<SetStateAction<C | null>>,
-    setContributorsError: Dispatch<SetStateAction<ComplexError>>
-  ) =>
-  async (value: string) => {
-    setRepos(null);
-    setContributors(null);
-    setContributorsError(null);
+  (setUser: Dispatch<SetStateAction<IUser | null>>) =>
+  async (login: string) => {
+    setUser(null);
 
-    if (!value.length) {
-      setUser(null);
+    if (!login.length) return;
+
+    const currentUser = getLocalStorage<IUser>('current-user');
+
+    if (currentUser && currentUser?.login === login) {
+      setLocalStorage('previous-user', currentUser);
+      setUser(currentUser);
       return;
     }
 
-    let userInfo = null;
+    const newUser = await getGithubUser(login);
 
-    try {
-      userInfo = await getGithubUser(value);
-    } catch (error) {
-      setUser(null);
-      throw error;
-    }
-
-    setLocalStorage('current-user', userInfo);
-    setLocalStorage('current-repos', null);
-    setLocalStorage('current-contributors', null);
-    setLocalStorage('current-blacklist', null);
-    setLocalStorage('current-reviewer', null);
-    setUser(userInfo);
+    setLocalStorage('previous-user', currentUser);
+    setLocalStorage('current-user', newUser);
+    setUser(newUser);
   };
