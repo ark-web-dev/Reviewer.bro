@@ -5,7 +5,6 @@ import warningIcon from '@/shared/assets/icons/warn-icon.svg?react';
 import { SearchBox } from '../SearchBox/SearchBox';
 import { LoadHandlingProvider, ShowMessage } from '@/shared/ui-components';
 import { useReposMetaData } from './hooks/useReposMetaData';
-import { IRepo } from '@/shared/types/types';
 
 export interface SearchReposProps {
   userLogin: string;
@@ -31,7 +30,7 @@ export const SearchRepos: React.FC<SearchReposProps> = ({ userLogin }) => {
       {repos.items && (
         <SearchBox
           searchList={repos.items}
-          onListItemClick={(_, repo) => repos.setCurrentRepo(repo as IRepo)}
+          onListItemClick={repos.setCurrentRepo}
           placeholder="Search Repository"
           searchInputSvgIcon={codeIcon}
           listItemSvgIcon={bookIcon}

@@ -1,43 +1,44 @@
-import { setLocalStorage } from '@/shared/lib';
-import { IUser } from '@/shared/types/types';
-import { useState, useCallback } from 'react';
+import { ISearchEntity, IUser } from '@/shared/types/types';
+import { useCallback, useEffect } from 'react';
 import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
 import { useAppStorage } from '@/shared/hooks/useAppStorage';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import {
+  addBlackListItemAction,
+  removeBlackListItemAction,
+  setBlackListAction,
+} from '@/store/entities/contributors/contributorsActionCreators';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { ContributorsState } from '@/store/entities/contributors/types/contributorsActions';
+import { setLocalStorage } from '@/shared/lib';
 
-export const useBlackListMetaData = (
-  addContributor: (user: IUser) => void,
-  removeContributor: (user: IUser) => void
-) => {
-  const [blackList, setBlackList] = useState<IUser[]>([]);
+export const useBlackListMetaData = () => {
+  const dispatch = useAppDispatch();
+  const { blackList }: ContributorsState = useAppSelector(
+    (store) => store.contributors
+  );
+
+  const addBlackListItem = useCallback((_: string, user: ISearchEntity) => {
+    dispatch(addBlackListItemAction(user as IUser));
+  }, []);
+  const removeBlackListItem = (user: IUser) => {
+    dispatch(removeBlackListItemAction(user));
+  };
 
   useAppStorage({
     key: 'current-blacklist',
-    setState: setBlackList,
+    addToStoreFromStorage: (storageBlackList: IUser[]) => {
+      dispatch(setBlackListAction(storageBlackList));
+    },
   });
 
-  useOnCurrentRepoChange('current-blacklist', () => setBlackList([]));
+  useOnCurrentRepoChange('current-blacklist', () =>
+    dispatch(setBlackListAction([]))
+  );
 
-  const addBlackListItem = useCallback((user: IUser) => {
-    setBlackList((prevList) => {
-      const newList = [...prevList, user];
-      setLocalStorage('current-blacklist', newList);
-      return newList;
-    });
-
-    removeContributor(user);
-  }, []);
-
-  const removeBlackListItem = (user: IUser) => {
-    setBlackList((prevList) => {
-      const newList = prevList.filter(
-        (currentUser) => currentUser.login !== user.login
-      );
-      setLocalStorage('current-blacklist', newList);
-      return newList;
-    });
-
-    addContributor(user);
-  };
+  useEffect(() => {
+    if (blackList) setLocalStorage('current-blacklist', blackList);
+  }, [blackList]);
 
   return {
     items: blackList,

@@ -4,16 +4,14 @@ import { IUser } from '../types/types';
 
 type AppStorageProps<T> = {
   key: string;
-  setState: React.Dispatch<React.SetStateAction<T>>;
-  ifNotFromStorage?: () => void;
-  unmount?: () => void;
+  addToStoreFromStorage: (value: T) => void;
+  doOnNotFromStorage?: () => void;
 };
 
 export const useAppStorage = <T>({
   key,
-  setState,
-  ifNotFromStorage,
-  unmount,
+  addToStoreFromStorage,
+  doOnNotFromStorage,
 }: AppStorageProps<T>) => {
   useEffect(() => {
     const currentUser = getLocalStorage<IUser>('current-user');
@@ -24,13 +22,9 @@ export const useAppStorage = <T>({
       currentValue &&
       (!previousUser || currentUser?.login === previousUser?.login)
     ) {
-      setState(currentValue);
+      addToStoreFromStorage(currentValue);
     } else {
-      ifNotFromStorage?.();
+      doOnNotFromStorage?.();
     }
-
-    return () => {
-      unmount?.();
-    };
   }, []);
 };

@@ -14,12 +14,7 @@ export const ContributorsControls: React.FC = memo(() => {
       isLoading={contributors.isLoading}
       loadingMessage="Loading Contributors..."
       error={contributors.error}>
-      <BlackListControls
-        contributors={contributors.items}
-        addContributor={contributors.add}
-        removeContributor={contributors.remove}
-      />
-
+      <BlackListControls contributors={contributors.items} />
       <RandomReviewer contributors={contributors.items} />
     </LoadHandlingProvider>
   );

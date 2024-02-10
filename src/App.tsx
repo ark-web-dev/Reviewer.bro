@@ -1,17 +1,14 @@
-import { useState } from 'react';
+import { Provider } from 'react-redux';
 import { MainContent } from './components/MainContent/MainContent';
-import { CurrentRepoContext } from './shared/context/CurrentRepoContext';
-import { IRepo } from './shared/types/types';
 import ErrorBoundary from './shared/providers/ErrorBoundary/ErrorBoundary';
+import { store } from './store/store';
 
 const App = () => {
-  const currentRepoState = useState<IRepo | null>(null);
-
   return (
     <ErrorBoundary>
-      <CurrentRepoContext.Provider value={currentRepoState}>
+      <Provider store={store}>
         <MainContent />
-      </CurrentRepoContext.Provider>
+      </Provider>
     </ErrorBoundary>
   );
 };

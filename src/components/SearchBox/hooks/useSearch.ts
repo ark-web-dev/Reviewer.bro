@@ -7,10 +7,6 @@ export const useSearch = (
 ): [SearchList, (value: string) => void] => {
   const [filteredResults, setFilteredResults] = useState<SearchList>([...list]);
 
-  useEffect(() => {
-    setFilteredResults(list);
-  }, [list]);
-
   const setSearchResult = useCallback(
     (value: string) => {
       const lowerCaseValue = value.toLowerCase();
@@ -24,7 +20,6 @@ export const useSearch = (
     },
     [list]
   );
-
   const debouncedSetSearchResult = useMemo(
     () =>
       debounce((value: string) => {
@@ -32,6 +27,10 @@ export const useSearch = (
       }, 300),
     []
   );
+
+  useEffect(() => {
+    setFilteredResults(list);
+  }, [list]);
 
   return [filteredResults, debouncedSetSearchResult];
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './RandomReviewer.module.css';
-import { getRandomNumber } from '@/shared/lib';
 import { LoadHandlingProvider } from '@/shared/ui-components';
 import { UserCard } from '../UserCard/UserCard';
 import { useReviewerMetaData } from './hooks/useReviewerMetaData';
@@ -13,7 +12,7 @@ export interface RandomReviewerProps {
 export const RandomReviewer: React.FC<RandomReviewerProps> = ({
   contributors,
 }) => {
-  const reviewer = useReviewerMetaData();
+  const reviewer = useReviewerMetaData(contributors);
   const contributorsLength = contributors.length;
 
   return (
@@ -22,11 +21,7 @@ export const RandomReviewer: React.FC<RandomReviewerProps> = ({
         className={styles.randButton}
         disabled={!contributorsLength || reviewer.isLoading}
         type="button"
-        onClick={() =>
-          reviewer.fetching(
-            contributors[getRandomNumber(0, contributorsLength)]?.login
-          )
-        }>
+        onClick={reviewer.fetching}>
         Show Random Reviewer
       </button>
 

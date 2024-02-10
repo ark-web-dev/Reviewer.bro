@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { CustomError } from '@/shared/types/types';
-import { ShowMessage } from '..';
+import { ShowMessage } from '../../ui-components';
 import warningIcon from '@/shared/assets/icons/warn-icon.svg?react';
 import loadIcon from '@/shared/assets/icons/load-icon.svg?react';
 

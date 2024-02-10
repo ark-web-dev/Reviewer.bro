@@ -1,29 +1,42 @@
-import { getReviewerFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
 import { IUser } from '@/shared/types/types';
-import { useState } from 'react';
 import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
 import { useAppStorage } from '@/shared/hooks/useAppStorage';
+import { setReviewerAction } from '@/store/entities/reviewer/reviewerActionCreators';
+import { ReviewerState } from '@/store/entities/reviewer/types/reviewerActions';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { fetchReviewerThunk } from '@/store/entities/reviewer/thunk/fetchReviewerThunk';
+import { getRandomNumber } from '@/shared/lib';
 
-export const useReviewerMetaData = () => {
-  const [randomReviewer, setRandomReviewer] = useState<IUser | null>(null);
-
-  const reviewerFetchingData = useFetching(
-    getReviewerFetchingCallback(setRandomReviewer),
-    0
+export const useReviewerMetaData = (contributors: IUser[]) => {
+  const dispatch = useAppDispatch();
+  const { reviewer, isReviewerLoading, error }: ReviewerState = useAppSelector(
+    (store) => store.reviewer
   );
+
+  const reviewerFetching = () => {
+    dispatch(
+      fetchReviewerThunk(
+        contributors[getRandomNumber(0, contributors.length)]?.login
+      )
+    );
+  };
 
   useAppStorage({
     key: 'current-reviewer',
-    setState: setRandomReviewer,
+    addToStoreFromStorage: (storageReviewer: IUser) => {
+      dispatch(setReviewerAction(storageReviewer));
+    },
   });
 
-  useOnCurrentRepoChange('current-reviewer', () => setRandomReviewer(null));
+  useOnCurrentRepoChange('current-reviewer', () =>
+    dispatch(setReviewerAction(null))
+  );
 
   return {
-    item: randomReviewer,
-    fetching: reviewerFetchingData.fetching,
-    isLoading: reviewerFetchingData.isLoading,
-    error: reviewerFetchingData.error,
+    item: reviewer,
+    fetching: reviewerFetching,
+    isLoading: isReviewerLoading,
+    error: error,
   };
 };

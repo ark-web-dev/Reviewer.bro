@@ -1,30 +1,41 @@
-import { getReposFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
-import { IRepo } from '@/shared/types/types';
-import { useContext, useState } from 'react';
-import { CurrentRepoContext } from '@/shared/context/CurrentRepoContext';
 import { useAppStorage } from '@/shared/hooks/useAppStorage';
+import { IRepo, ISearchEntity } from '@/shared/types/types';
+import { setCurrentRepoAction } from '@/store/entities/currentRepo/currentRepoActionCreators';
+import { setReposAction } from '@/store/entities/repo/reposActionCreators';
+import { fetchReposThunk } from '@/store/entities/repo/thunk/fetchReposThunk';
+import { ReposState } from '@/store/entities/repo/types/reposActions';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { useEffect } from 'react';
 
 export const useReposMetaData = (userLogin: string) => {
-  const [repos, setRepos] = useState<IRepo[] | null>(null);
-  const reposFetchingData = useFetching(getReposFetchingCallback(setRepos));
-  const setCurrentRepo = useContext(CurrentRepoContext)[1];
+  const dispatch = useAppDispatch();
+  const { repos, isReposLoading, error }: ReposState = useAppSelector(
+    (store) => store.repos
+  );
 
   useAppStorage({
     key: 'current-repos',
-    setState: setRepos,
-    ifNotFromStorage: () => {
-      setCurrentRepo(null);
-      reposFetchingData.fetching(userLogin);
+    addToStoreFromStorage: (storageRepos: IRepo[]) => {
+      dispatch(setReposAction(storageRepos));
     },
-    unmount: () => setCurrentRepo(null),
+    doOnNotFromStorage: () => {
+      dispatch(setCurrentRepoAction(null));
+      dispatch(fetchReposThunk(userLogin));
+    },
   });
+
+  useEffect(() => {
+    return () => {
+      dispatch(setCurrentRepoAction(null));
+    };
+  }, []);
 
   return {
     items: repos,
-    fetching: reposFetchingData.fetching,
-    isLoading: reposFetchingData.isLoading,
-    error: reposFetchingData.error,
-    setCurrentRepo: setCurrentRepo,
+    isLoading: isReposLoading,
+    error: error,
+    setCurrentRepo: (_: string, repo: ISearchEntity) =>
+      dispatch(setCurrentRepoAction(repo as IRepo)),
   };
 };

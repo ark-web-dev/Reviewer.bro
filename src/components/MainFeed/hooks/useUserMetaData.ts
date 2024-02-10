@@ -1,27 +1,43 @@
-import { getUserFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
+import { debounce, getLocalStorage, setLocalStorage } from '@/shared/lib';
 import { IUser } from '@/shared/types/types';
-import { useEffect, useState } from 'react';
-import { getLocalStorage, setLocalStorage } from '@/shared/lib';
+import { fetchUserThunk } from '@/store/entities/user/thunk/fetchUserThunk';
+import { UserState } from '@/store/entities/user/types/userActions';
+import { setUserAction } from '@/store/entities/user/userActionCreators';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { useMemo, useEffect } from 'react';
 
 export const useUserMetaData = () => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const dispatch = useAppDispatch();
+  const { user, isUserLoading, error }: UserState = useAppSelector(
+    (store) => store.user
+  );
+
+  const debouncedFetchingUser = useMemo(
+    () =>
+      debounce((login: string) => {
+        if (!login.length) {
+          dispatch(setUserAction(null));
+          return;
+        }
+        dispatch(fetchUserThunk(login));
+      }, 1500),
+    []
+  );
 
   useEffect(() => {
     const currentUser = getLocalStorage<IUser>('current-user');
 
     if (currentUser) {
-      setUser(currentUser);
+      dispatch(setUserAction(currentUser));
       setLocalStorage('previous-user', currentUser);
     }
   }, []);
 
-  const userFetchingData = useFetching(getUserFetchingCallback(setUser));
-
   return {
     item: user,
-    fetching: userFetchingData.fetching,
-    isLoading: userFetchingData.isLoading,
-    error: userFetchingData.error,
+    fetching: debouncedFetchingUser,
+    isLoading: isUserLoading,
+    error: error,
   };
 };
