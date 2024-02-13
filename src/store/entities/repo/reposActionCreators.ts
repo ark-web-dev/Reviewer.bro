@@ -17,9 +17,3 @@ export const fetchReposErrorAction = (error: ComplexError) =>
     type: ReposActionTypes.FETCH_REPOS_ERROR,
     payload: { error },
   } as const);
-
-export const setReposAction = (repos: IRepo[] | null) =>
-  ({
-    type: ReposActionTypes.SET_REPOS,
-    payload: { repos },
-  } as const);

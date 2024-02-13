@@ -1,4 +1,4 @@
-import { getRandomNumber, setLocalStorage } from '@/shared/lib';
+import { getRandomNumber } from '@/shared/lib';
 import { Dispatch } from 'react';
 import {
   fetchReviewerErrorAction,
@@ -26,6 +26,5 @@ export const fetchReviewerThunk =
       return;
     }
 
-    setLocalStorage('current-reviewer', reviewer);
     dispatch(fetchReviewerSuccessAction(reviewer));
   };

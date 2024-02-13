@@ -1,6 +1,5 @@
 import { getGithubUser } from '@/shared/API';
-import { getLocalStorage, setLocalStorage } from '@/shared/lib';
-import { IUser, ComplexError } from '@/shared/types/types';
+import { ComplexError } from '@/shared/types/types';
 import { Dispatch } from 'react';
 import { UserActions } from '../types/userActions';
 import {
@@ -11,17 +10,9 @@ import {
 
 export const fetchUserThunk =
   (login: string) => async (dispatch: Dispatch<UserActions>) => {
-    dispatch(fetchUserAction());
-
-    const currentUser = getLocalStorage<IUser>('current-user');
-
-    if (currentUser && currentUser?.login === login) {
-      setLocalStorage('previous-user', currentUser);
-      dispatch(fetchUserSuccessAction(currentUser));
-      return;
-    }
-
     let user;
+
+    dispatch(fetchUserAction());
 
     try {
       user = await getGithubUser(login);
@@ -29,9 +20,6 @@ export const fetchUserThunk =
       dispatch(fetchUserErrorAction(err as ComplexError));
       return;
     }
-
-    setLocalStorage('previous-user', currentUser);
-    setLocalStorage('current-user', user);
 
     dispatch(fetchUserSuccessAction(user));
   };

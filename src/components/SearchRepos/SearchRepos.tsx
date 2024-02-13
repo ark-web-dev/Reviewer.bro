@@ -27,6 +27,7 @@ export const SearchRepos: React.FC = () => {
         <SearchBox
           searchList={repos.items}
           onListItemClick={repos.setCurrentRepo}
+          initialInputValue={repos.currentRepoName}
           placeholder="Search Repository"
           searchInputSvgIcon={codeIcon}
           listItemSvgIcon={bookIcon}

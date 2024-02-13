@@ -60,8 +60,8 @@ export const contributorsReducer = (
       return {
         ...state,
         contributors: [
-          ...(state.contributors || []),
           action.payload.blackListItem,
+          ...(state.contributors || []),
         ],
         blackList:
           state.blackList &&

@@ -3,14 +3,12 @@ import {
   fetchReposAction,
   fetchReposSuccessAction,
   fetchReposErrorAction,
-  setReposAction,
 } from '../reposActionCreators';
 
 export enum ReposActionTypes {
   FETCH_REPOS = 'FETCH_REPOS',
   FETCH_REPOS_SUCCESS = 'FETCH_REPOS_SUCCESS',
   FETCH_REPOS_ERROR = 'FETCH_REPOS_ERROR',
-  SET_REPOS = 'SET_REPOS',
 }
 
 export type ReposState = {
@@ -22,5 +20,4 @@ export type ReposState = {
 export type ReposActions =
   | ReturnType<typeof fetchReposAction>
   | ReturnType<typeof fetchReposSuccessAction>
-  | ReturnType<typeof fetchReposErrorAction>
-  | ReturnType<typeof setReposAction>;
+  | ReturnType<typeof fetchReposErrorAction>;

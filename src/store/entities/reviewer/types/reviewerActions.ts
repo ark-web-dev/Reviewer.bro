@@ -3,14 +3,12 @@ import {
   fetchReviewerAction,
   fetchReviewerSuccessAction,
   fetchReviewerErrorAction,
-  setReviewerAction,
 } from '../reviewerActionCreators';
 
 export enum ReviewerActionTypes {
   FETCH_REVIEWER = 'FETCH_REVIEWER',
   FETCH_REVIEWER_SUCCESS = 'FETCH_REVIEWER_SUCCESS',
   FETCH_REVIEWER_ERROR = 'FETCH_REVIEWER_ERROR',
-  SET_REVIEWER = 'SET_REVIEWER',
 }
 
 export type ReviewerState = {
@@ -22,5 +20,4 @@ export type ReviewerState = {
 export type ReviewerActions =
   | ReturnType<typeof fetchReviewerAction>
   | ReturnType<typeof fetchReviewerSuccessAction>
-  | ReturnType<typeof fetchReviewerErrorAction>
-  | ReturnType<typeof setReviewerAction>;
+  | ReturnType<typeof fetchReviewerErrorAction>;

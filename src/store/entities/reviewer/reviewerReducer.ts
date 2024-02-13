@@ -34,11 +34,6 @@ export const reviewerReducer = (
         isReviewerLoading: false,
         error: action.payload.error,
       };
-    case ReviewerActionTypes.SET_REVIEWER:
-      return {
-        ...state,
-        reviewer: action.payload.reviewer,
-      };
     default:
       return state;
   }

@@ -34,11 +34,6 @@ export const reposReducer = (
         isReposLoading: false,
         error: action.payload.error,
       };
-    case ReposActionTypes.SET_REPOS:
-      return {
-        ...state,
-        repos: action.payload.repos,
-      };
     default:
       return state;
   }

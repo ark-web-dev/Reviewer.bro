@@ -1,4 +1,3 @@
-import { setLocalStorage } from '@/shared/lib';
 import { ComplexError } from '@/shared/types/types';
 import { Dispatch } from 'react';
 import {
@@ -23,8 +22,6 @@ export const fetchReposThunk =
       dispatch(fetchReposErrorAction(err as ComplexError));
       return;
     }
-
-    setLocalStorage('current-repos', repos);
 
     dispatch(fetchReposSuccessAction(repos));
   };

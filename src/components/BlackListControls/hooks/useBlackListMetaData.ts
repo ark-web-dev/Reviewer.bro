@@ -1,7 +1,5 @@
-import { ISearchEntity, IUser } from '@/shared/types/types';
+import { BlackListStorage, ISearchEntity, IUser } from '@/shared/types/types';
 import { useCallback, useEffect } from 'react';
-import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
-import { useAppStorage } from '@/shared/hooks/useAppStorage';
 import { useAppSelector } from '@/store/hooks/useAppSelector';
 import {
   addBlackListItemAction,
@@ -10,10 +8,11 @@ import {
 } from '@/store/entities/contributors/contributorsActionCreators';
 import { useAppDispatch } from '@/store/hooks/useAppDispatch';
 import { ContributorsState } from '@/store/entities/contributors/types/contributorsActions';
-import { setLocalStorage } from '@/shared/lib';
+import { getLocalStorage, setLocalStorage } from '@/shared/lib';
 
 export const useBlackListMetaData = () => {
   const dispatch = useAppDispatch();
+  const { currentRepo } = useAppSelector((store) => store.currentRepo);
   const { blackList }: ContributorsState = useAppSelector(
     (store) => store.contributors
   );
@@ -25,19 +24,23 @@ export const useBlackListMetaData = () => {
     dispatch(removeBlackListItemAction(user));
   };
 
-  useAppStorage({
-    key: 'current-blacklist',
-    addToStoreFromStorage: (storageBlackList: IUser[]) => {
-      dispatch(setBlackListAction(storageBlackList));
-    },
-  });
+  useEffect(() => {
+    const blackList = getLocalStorage<BlackListStorage>('current-blacklist');
 
-  useOnCurrentRepoChange('current-blacklist', () =>
-    dispatch(setBlackListAction([]))
-  );
+    if (blackList?.relatedRepoName === currentRepo?.name && blackList?.items) {
+      dispatch(setBlackListAction(blackList?.items));
+    } else {
+      setLocalStorage('current-blacklist', null);
+      dispatch(setBlackListAction([]));
+    }
+  }, [currentRepo]);
 
   useEffect(() => {
-    if (blackList) setLocalStorage('current-blacklist', blackList);
+    if (blackList)
+      setLocalStorage('current-blacklist', {
+        relatedRepoName: currentRepo?.name,
+        items: blackList,
+      });
   }, [blackList]);
 
   return {

@@ -1,4 +1,3 @@
-import { setLocalStorage } from '@/shared/lib';
 import { Dispatch } from 'react';
 import {
   fetchContributorsErrorAction,
@@ -7,6 +6,8 @@ import {
 import { ContributorsActions } from '../types/contributorsActions';
 import { getGithubContributors } from '@/shared/API';
 import { RootState } from '@/store/store';
+import { getLocalStorage } from '@/shared/lib';
+import { BlackListStorage, IUser } from '@/shared/types/types';
 
 export const fetchContributorsThunk =
   () =>
@@ -20,7 +21,7 @@ export const fetchContributorsThunk =
     if (!user || !currentRepo) return;
 
     const errorMessage = 'There are no contributors to this repositories yet.';
-    let contributors;
+    let contributors: IUser[];
 
     try {
       contributors = await getGithubContributors(user.login, currentRepo.name);
@@ -29,6 +30,18 @@ export const fetchContributorsThunk =
       return;
     }
 
-    setLocalStorage('current-contributors', contributors);
+    const blackList = getLocalStorage<BlackListStorage>('current-blacklist');
+
+    if (blackList?.items.length) {
+      const blackListSet = blackList?.items.reduce((set, current) => {
+        set.add(current.login);
+        return set;
+      }, new Set());
+
+      contributors = contributors.filter(
+        (contributor) => !blackListSet.has(contributor.login)
+      );
+    }
+
     dispatch(fetchContributorsSuccessAction(contributors));
   };

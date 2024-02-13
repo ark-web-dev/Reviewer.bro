@@ -16,6 +16,7 @@ export const MainFeed: React.FC = () => {
       <Input
         onChangeCallback={user.fetching}
         className={styles.searchUserInput}
+        value={user.inputValue}
         placeholder="Github Login"
         icon={githubIcon}
       />
