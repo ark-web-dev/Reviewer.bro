@@ -6,12 +6,8 @@ import { SearchBox } from '../SearchBox/SearchBox';
 import { LoadHandlingProvider, ShowMessage } from '@/shared/ui-components';
 import { useReposMetaData } from './hooks/useReposMetaData';
 
-export interface SearchReposProps {
-  userLogin: string;
-}
-
-export const SearchRepos: React.FC<SearchReposProps> = ({ userLogin }) => {
-  const repos = useReposMetaData(userLogin);
+export const SearchRepos: React.FC = () => {
+  const repos = useReposMetaData();
 
   if (repos.items && !repos.items.length) {
     return (

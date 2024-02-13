@@ -22,8 +22,8 @@ export const useContributorsMetaData = () => {
     doOnNotFromStorage: () => setLocalStorage('current-contributors', null),
   });
 
-  useOnCurrentRepoChange('current-contributors', (currentRepo) =>
-    dispatch(fetchContributorsThunk(currentRepo?.owner.login, currentRepo.name))
+  useOnCurrentRepoChange('current-contributors', () =>
+    dispatch(fetchContributorsThunk())
   );
 
   useEffect(() => {

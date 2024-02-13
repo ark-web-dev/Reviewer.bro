@@ -12,7 +12,7 @@ export interface RandomReviewerProps {
 export const RandomReviewer: React.FC<RandomReviewerProps> = ({
   contributors,
 }) => {
-  const reviewer = useReviewerMetaData(contributors);
+  const reviewer = useReviewerMetaData();
   const contributorsLength = contributors.length;
 
   return (

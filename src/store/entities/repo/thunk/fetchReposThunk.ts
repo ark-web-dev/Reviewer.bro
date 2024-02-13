@@ -7,13 +7,18 @@ import {
 } from '../reposActionCreators';
 import { ReposActions } from '../types/reposActions';
 import { getGithubUserRepos } from '@/shared/API';
+import { RootState } from '@/store/store';
 
 export const fetchReposThunk =
-  (login: string) => async (dispatch: Dispatch<ReposActions>) => {
+  () => async (dispatch: Dispatch<ReposActions>, getState: () => RootState) => {
+    const { user } = getState().user;
+
+    if (!user) return;
+
     let repos;
 
     try {
-      repos = await getGithubUserRepos(login);
+      repos = await getGithubUserRepos(user.login);
     } catch (err) {
       dispatch(fetchReposErrorAction(err as ComplexError));
       return;

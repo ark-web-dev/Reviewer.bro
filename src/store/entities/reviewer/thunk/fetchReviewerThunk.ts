@@ -1,4 +1,4 @@
-import { setLocalStorage } from '@/shared/lib';
+import { getRandomNumber, setLocalStorage } from '@/shared/lib';
 import { Dispatch } from 'react';
 import {
   fetchReviewerErrorAction,
@@ -7,9 +7,16 @@ import {
 import { ReviewerActions } from '../types/reviewerActions';
 import { getGithubUser } from '@/shared/API';
 import { ComplexError } from '@/shared/types/types';
+import { RootState } from '@/store/store';
 
 export const fetchReviewerThunk =
-  (login: string) => async (dispatch: Dispatch<ReviewerActions>) => {
+  () =>
+  async (dispatch: Dispatch<ReviewerActions>, getState: () => RootState) => {
+    const { contributors } = getState().contributors;
+
+    if (!contributors) return;
+
+    const login = contributors[getRandomNumber(0, contributors.length)].login;
     let reviewer;
 
     try {

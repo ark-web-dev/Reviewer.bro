@@ -8,7 +8,7 @@ import { useAppDispatch } from '@/store/hooks/useAppDispatch';
 import { useAppSelector } from '@/store/hooks/useAppSelector';
 import { useEffect } from 'react';
 
-export const useReposMetaData = (userLogin: string) => {
+export const useReposMetaData = () => {
   const dispatch = useAppDispatch();
   const { repos, isReposLoading, error }: ReposState = useAppSelector(
     (store) => store.repos
@@ -21,7 +21,7 @@ export const useReposMetaData = (userLogin: string) => {
     },
     doOnNotFromStorage: () => {
       dispatch(setCurrentRepoAction(null));
-      dispatch(fetchReposThunk(userLogin));
+      dispatch(fetchReposThunk());
     },
   });
 

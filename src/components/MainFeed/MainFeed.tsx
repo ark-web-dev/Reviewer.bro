@@ -29,7 +29,7 @@ export const MainFeed: React.FC = () => {
 
       {user.item && (
         <>
-          <SearchRepos userLogin={user.item.login} />
+          <SearchRepos />
           <ContributorsControls />
         </>
       )}

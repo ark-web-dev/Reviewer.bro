@@ -6,20 +6,15 @@ import { ReviewerState } from '@/store/entities/reviewer/types/reviewerActions';
 import { useAppDispatch } from '@/store/hooks/useAppDispatch';
 import { useAppSelector } from '@/store/hooks/useAppSelector';
 import { fetchReviewerThunk } from '@/store/entities/reviewer/thunk/fetchReviewerThunk';
-import { getRandomNumber } from '@/shared/lib';
 
-export const useReviewerMetaData = (contributors: IUser[]) => {
+export const useReviewerMetaData = () => {
   const dispatch = useAppDispatch();
   const { reviewer, isReviewerLoading, error }: ReviewerState = useAppSelector(
     (store) => store.reviewer
   );
 
   const reviewerFetching = () => {
-    dispatch(
-      fetchReviewerThunk(
-        contributors[getRandomNumber(0, contributors.length)]?.login
-      )
-    );
+    dispatch(fetchReviewerThunk());
   };
 
   useAppStorage({
