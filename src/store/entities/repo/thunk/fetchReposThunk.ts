@@ -3,6 +3,7 @@ import { Dispatch } from 'react';
 import {
   fetchReposSuccessAction,
   fetchReposErrorAction,
+  fetchReposAction,
 } from '../reposActionCreators';
 import { ReposActions } from '../types/reposActions';
 import { getGithubUserRepos } from '@/shared/API';
@@ -13,6 +14,8 @@ export const fetchReposThunk =
     const { user } = getState().user;
 
     if (!user) return;
+
+    dispatch(fetchReposAction());
 
     let repos;
 

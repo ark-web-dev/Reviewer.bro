@@ -1,5 +1,6 @@
 import { Dispatch } from 'react';
 import {
+  fetchContributorsAction,
   fetchContributorsErrorAction,
   fetchContributorsSuccessAction,
 } from '../contributorsActionCreators';
@@ -19,6 +20,8 @@ export const fetchContributorsThunk =
     const { currentRepo } = getState().currentRepo;
 
     if (!user || !currentRepo) return;
+
+    dispatch(fetchContributorsAction());
 
     const errorMessage = 'There are no contributors to this repositories yet.';
     let contributors: IUser[];

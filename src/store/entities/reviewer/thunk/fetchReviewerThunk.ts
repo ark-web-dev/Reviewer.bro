@@ -1,6 +1,7 @@
 import { getRandomNumber } from '@/shared/lib';
 import { Dispatch } from 'react';
 import {
+  fetchReviewerAction,
   fetchReviewerErrorAction,
   fetchReviewerSuccessAction,
 } from '../reviewerActionCreators';
@@ -15,6 +16,8 @@ export const fetchReviewerThunk =
     const { contributors } = getState().contributors;
 
     if (!contributors) return;
+
+    dispatch(fetchReviewerAction());
 
     const login = contributors[getRandomNumber(0, contributors.length)].login;
     let reviewer;
