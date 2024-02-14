@@ -5,11 +5,11 @@ import { fetchReposThunk } from '@/store/entities/repo/thunk/fetchReposThunk';
 import { ReposState } from '@/store/entities/repo/types/reposActions';
 import { useAppDispatch } from '@/store/hooks/useAppDispatch';
 import { useAppSelector } from '@/store/hooks/useAppSelector';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export const useReposMetaData = () => {
   const dispatch = useAppDispatch();
-  const [currentRepo, setCurrentRepo] = useState<IRepo | null>(null);
+  const { currentRepo } = useAppSelector((store) => store.currentRepo);
   const { repos, isReposLoading, error }: ReposState = useAppSelector(
     (store) => store.repos
   );
@@ -18,7 +18,6 @@ export const useReposMetaData = () => {
     const currentRepo = getLocalStorage<IRepo>('current-repo');
 
     if (currentRepo) {
-      setCurrentRepo(currentRepo);
       dispatch(setCurrentRepoAction(currentRepo));
     } else {
       dispatch(setCurrentRepoAction(null));
@@ -27,6 +26,7 @@ export const useReposMetaData = () => {
     dispatch(fetchReposThunk());
 
     return () => {
+      setLocalStorage('current-repo', null);
       dispatch(setCurrentRepoAction(null));
     };
   }, []);
