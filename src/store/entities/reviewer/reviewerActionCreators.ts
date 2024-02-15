@@ -17,3 +17,9 @@ export const fetchReviewerErrorAction = (error: ComplexError) =>
     type: ReviewerActionTypes.FETCH_REVIEWER_ERROR,
     payload: { error },
   } as const);
+
+export const setReviewerAction = (reviewer: IUser | null) =>
+  ({
+    type: ReviewerActionTypes.SET_REVIEWER,
+    payload: { reviewer },
+  } as const);

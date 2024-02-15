@@ -39,6 +39,8 @@ export const contributorsReducer = (
       return {
         ...state,
         contributors: action.payload.contributors,
+        isContributorsLoading: false,
+        error: null,
       };
     case ContributorsActionTypes.SET_BLACK_LIST:
       return {

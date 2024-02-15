@@ -34,6 +34,8 @@ export const userReducer = (
       return {
         ...state,
         user: action.payload.user,
+        isUserLoading: false,
+        error: null,
       };
     default:
       return state;
