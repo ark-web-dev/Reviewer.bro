@@ -1,29 +1,31 @@
-import { getReviewerFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
-import { IUser } from '@/shared/types/types';
-import { useState } from 'react';
-import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
-import { useAppStorage } from '@/shared/hooks/useAppStorage';
+import { ReviewerState } from '@/store/entities/reviewer/types/reviewerActions';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { fetchReviewerThunk } from '@/store/entities/reviewer/thunk/fetchReviewerThunk';
+import { useEffect } from 'react';
+import { setReviewerAction } from '@/store/entities/reviewer/reviewerActionCreators';
 
 export const useReviewerMetaData = () => {
-  const [randomReviewer, setRandomReviewer] = useState<IUser | null>(null);
-
-  const reviewerFetchingData = useFetching(
-    getReviewerFetchingCallback(setRandomReviewer),
-    0
+  const dispatch = useAppDispatch();
+  const { currentRepo } = useAppSelector((store) => store.currentRepo);
+  const { reviewer, isReviewerLoading, error }: ReviewerState = useAppSelector(
+    (store) => store.reviewer
   );
 
-  useAppStorage({
-    key: 'current-reviewer',
-    setState: setRandomReviewer,
-  });
+  const reviewerFetching = () => {
+    dispatch(fetchReviewerThunk());
+  };
 
-  useOnCurrentRepoChange('current-reviewer', () => setRandomReviewer(null));
+  useEffect(() => {
+    if (currentRepo) {
+      dispatch(setReviewerAction(null));
+    }
+  }, [currentRepo]);
 
   return {
-    item: randomReviewer,
-    fetching: reviewerFetchingData.fetching,
-    isLoading: reviewerFetchingData.isLoading,
-    error: reviewerFetchingData.error,
+    item: reviewer,
+    fetching: reviewerFetching,
+    isLoading: isReviewerLoading,
+    error: error,
   };
 };

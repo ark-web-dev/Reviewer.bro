@@ -1,43 +1,47 @@
-import { setLocalStorage } from '@/shared/lib';
-import { IUser } from '@/shared/types/types';
-import { useState, useCallback } from 'react';
-import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
-import { useAppStorage } from '@/shared/hooks/useAppStorage';
+import { BlackListStorage, ISearchEntity, IUser } from '@/shared/types/types';
+import { useCallback, useEffect } from 'react';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import {
+  addBlackListItemAction,
+  removeBlackListItemAction,
+  setBlackListAction,
+} from '@/store/entities/contributors/contributorsActionCreators';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { ContributorsState } from '@/store/entities/contributors/types/contributorsActions';
+import { getLocalStorage, setLocalStorage } from '@/shared/lib';
 
-export const useBlackListMetaData = (
-  addContributor: (user: IUser) => void,
-  removeContributor: (user: IUser) => void
-) => {
-  const [blackList, setBlackList] = useState<IUser[]>([]);
+export const useBlackListMetaData = () => {
+  const dispatch = useAppDispatch();
+  const { currentRepo } = useAppSelector((store) => store.currentRepo);
+  const { blackList }: ContributorsState = useAppSelector(
+    (store) => store.contributors
+  );
 
-  useAppStorage({
-    key: 'current-blacklist',
-    setState: setBlackList,
-  });
-
-  useOnCurrentRepoChange('current-blacklist', () => setBlackList([]));
-
-  const addBlackListItem = useCallback((user: IUser) => {
-    setBlackList((prevList) => {
-      const newList = [...prevList, user];
-      setLocalStorage('current-blacklist', newList);
-      return newList;
-    });
-
-    removeContributor(user);
+  const addBlackListItem = useCallback((_: string, user: ISearchEntity) => {
+    dispatch(addBlackListItemAction(user as IUser));
   }, []);
-
   const removeBlackListItem = (user: IUser) => {
-    setBlackList((prevList) => {
-      const newList = prevList.filter(
-        (currentUser) => currentUser.login !== user.login
-      );
-      setLocalStorage('current-blacklist', newList);
-      return newList;
-    });
-
-    addContributor(user);
+    dispatch(removeBlackListItemAction(user));
   };
+
+  useEffect(() => {
+    const blackList = getLocalStorage<BlackListStorage>('current-blacklist');
+
+    if (blackList?.relatedRepoName === currentRepo?.name && blackList?.items) {
+      dispatch(setBlackListAction(blackList?.items));
+    } else {
+      setLocalStorage('current-blacklist', null);
+      dispatch(setBlackListAction([]));
+    }
+  }, [currentRepo]);
+
+  useEffect(() => {
+    if (blackList)
+      setLocalStorage('current-blacklist', {
+        relatedRepoName: currentRepo?.name,
+        items: blackList,
+      });
+  }, [blackList]);
 
   return {
     items: blackList,

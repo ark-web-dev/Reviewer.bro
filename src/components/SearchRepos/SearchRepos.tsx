@@ -1,18 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
 import codeIcon from '@/shared/assets/icons/code-icon.svg?react';
 import bookIcon from '@/shared/assets/icons/book-icon.svg?react';
 import warningIcon from '@/shared/assets/icons/warn-icon.svg?react';
 import { SearchBox } from '../SearchBox/SearchBox';
 import { LoadHandlingProvider, ShowMessage } from '@/shared/ui-components';
 import { useReposMetaData } from './hooks/useReposMetaData';
-import { IRepo } from '@/shared/types/types';
+import { appHeights } from '@/shared/const/appHeights';
 
-export interface SearchReposProps {
-  userLogin: string;
-}
-
-export const SearchRepos: React.FC<SearchReposProps> = ({ userLogin }) => {
-  const repos = useReposMetaData(userLogin);
+export const SearchRepos: React.FC = memo(() => {
+  const repos = useReposMetaData();
 
   if (repos.items && !repos.items.length) {
     return (
@@ -27,11 +23,14 @@ export const SearchRepos: React.FC<SearchReposProps> = ({ userLogin }) => {
     <LoadHandlingProvider
       isLoading={repos.isLoading}
       error={repos.error}
-      loadingMessage="Loading Repositories...">
+      loadingMessage="Loading Repositories..."
+      loadHeight={appHeights.repos}
+      zIndex={1}>
       {repos.items && (
         <SearchBox
           searchList={repos.items}
-          onListItemClick={(_, repo) => repos.setCurrentRepo(repo as IRepo)}
+          onListItemClick={repos.setCurrentRepo}
+          initialInputValue={repos.currentRepoName}
           placeholder="Search Repository"
           searchInputSvgIcon={codeIcon}
           listItemSvgIcon={bookIcon}
@@ -39,4 +38,4 @@ export const SearchRepos: React.FC<SearchReposProps> = ({ userLogin }) => {
       )}
     </LoadHandlingProvider>
   );
-};
+});
