@@ -37,6 +37,11 @@ export type SearchItemOnClickCallback = (
 
 export type SearchList = ISearchEntity[];
 
+export type BlackListStorage = {
+  relatedRepoName: string;
+  items: IUser[];
+};
+
 export type Svg = React.FC<React.SVGProps<SVGSVGElement>>;
 
 export type CustomError = {

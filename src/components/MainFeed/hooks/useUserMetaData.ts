@@ -1,27 +1,50 @@
-import { getUserFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
-import { IUser } from '@/shared/types/types';
-import { useEffect, useState } from 'react';
-import { getLocalStorage, setLocalStorage } from '@/shared/lib';
+import { debounce, getLocalStorage, setLocalStorage } from '@/shared/lib';
+import { fetchUserThunk } from '@/store/entities/user/thunk/fetchUserThunk';
+import { UserState } from '@/store/entities/user/types/userActions';
+import { setUserAction } from '@/store/entities/user/userActionCreators';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { useMemo, useEffect, useState, useCallback } from 'react';
 
 export const useUserMetaData = () => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const dispatch = useAppDispatch();
+  const [userInputValue, setUserInputValue] = useState('');
+  const { user, isUserLoading, error }: UserState = useAppSelector(
+    (store) => store.user
+  );
+
+  const debouncedFetchingUser = useMemo(
+    () =>
+      debounce((login: string) => {
+        if (!login.length) {
+          dispatch(setUserAction(null));
+          return;
+        }
+        setLocalStorage('current-user-login', login);
+        dispatch(fetchUserThunk(login));
+      }, 800),
+    []
+  );
+
+  const fetchingUser = useCallback((value: string) => {
+    setUserInputValue(value);
+    debouncedFetchingUser(value);
+  }, []);
 
   useEffect(() => {
-    const currentUser = getLocalStorage<IUser>('current-user');
+    const currentUserLogin = getLocalStorage<string>('current-user-login');
 
-    if (currentUser) {
-      setUser(currentUser);
-      setLocalStorage('previous-user', currentUser);
+    if (currentUserLogin) {
+      setUserInputValue(currentUserLogin);
+      dispatch(fetchUserThunk(currentUserLogin));
     }
   }, []);
 
-  const userFetchingData = useFetching(getUserFetchingCallback(setUser));
-
   return {
     item: user,
-    fetching: userFetchingData.fetching,
-    isLoading: userFetchingData.isLoading,
-    error: userFetchingData.error,
+    fetching: fetchingUser,
+    isLoading: isUserLoading,
+    error: error,
+    inputValue: userInputValue,
   };
 };

@@ -14,6 +14,7 @@ import { useSearch } from './hooks/useSearch';
 
 export type SearchBoxProps = {
   searchList: SearchList;
+  initialInputValue?: string;
   placeholder?: string;
   searchInputSvgIcon: Svg;
 };
@@ -21,17 +22,21 @@ export type SearchBoxProps = {
 export const SearchBox: React.FC<SearchBoxProps & ISearchListItem> = memo(
   ({
     searchList,
+    initialInputValue = '',
     placeholder = 'Search',
     searchInputSvgIcon,
     listItemSvgIcon,
     onListItemClick,
   }) => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(initialInputValue);
     const refSearchBox = useRef<HTMLDivElement | null>(null);
     const [searchResults, getSearchResults] = useSearch(searchList);
 
-    useEffect(() => setInputValue(''), [searchList]);
+    useEffect(() => {
+      if (!initialInputValue) setInputValue('');
+    }, [searchList]);
+
     useOnClickOutside(refSearchBox, () => setIsDropdownVisible(false));
 
     return (

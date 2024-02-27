@@ -7,18 +7,10 @@
   position: relative;
   padding: 0 15px;
   background-color: inherit;
-  transition: all 0.5s;
-}
-
-.alignTop {
-  margin-bottom: auto;
 }
 
 @media (max-width: 580px) {
   .mainFeed {
     margin-bottom: 80px;
-  }
-  .alignTop {
-    margin-bottom: auto;
   }
 }

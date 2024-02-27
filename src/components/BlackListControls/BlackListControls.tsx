@@ -10,23 +10,19 @@ import { useBlackListMetaData } from './hooks/useBlackListMetaData';
 
 export interface BlackListControlsProps {
   contributors: IUser[];
-  addContributor: (user: IUser) => void;
-  removeContributor: (user: IUser) => void;
 }
 
 export const BlackListControls: React.FC<BlackListControlsProps> = ({
   contributors,
-  addContributor,
-  removeContributor,
 }) => {
-  const blackList = useBlackListMetaData(addContributor, removeContributor);
+  const blackList = useBlackListMetaData();
 
   return (
     <>
       <SearchBox
         placeholder="Add to Black List"
         searchList={contributors}
-        onListItemClick={(_, item) => blackList.add(item as IUser)}
+        onListItemClick={blackList.add}
         searchInputSvgIcon={groupIcon}
         listItemSvgIcon={userIcon}
       />

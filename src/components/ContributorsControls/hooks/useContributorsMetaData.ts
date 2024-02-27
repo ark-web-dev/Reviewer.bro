@@ -1,50 +1,31 @@
-import { getContributorsFetchingCallback } from '@/shared/API';
-import { useFetching } from '@/shared/hooks/useFetching';
-import { IUser } from '@/shared/types/types';
-import { useState } from 'react';
-import { useOnCurrentRepoChange } from '@/shared/hooks/useOnCurrentRepoChange';
-import { useAppStorage } from '@/shared/hooks/useAppStorage';
-import { setLocalStorage } from '@/shared/lib';
+import { setContributorsAction } from '@/store/entities/contributors/contributorsActionCreators';
+import { fetchContributorsThunk } from '@/store/entities/contributors/thunk/fetchContributorsThunk';
+import { ContributorsState } from '@/store/entities/contributors/types/contributorsActions';
+import { useAppDispatch } from '@/store/hooks/useAppDispatch';
+import { useAppSelector } from '@/store/hooks/useAppSelector';
+import { useEffect } from 'react';
 
 export const useContributorsMetaData = () => {
-  const [contributors, setContributors] = useState<IUser[] | null>(null);
+  const dispatch = useAppDispatch();
+  const { currentRepo } = useAppSelector((store) => store.currentRepo);
+  const { contributors, isContributorsLoading, error }: ContributorsState =
+    useAppSelector((store) => store.contributors);
 
-  const contributorsFetchingData = useFetching(
-    getContributorsFetchingCallback(setContributors)
-  );
+  useEffect(() => {
+    if (currentRepo) {
+      dispatch(fetchContributorsThunk());
+    }
+  }, [currentRepo]);
 
-  useAppStorage({
-    key: 'current-contributors',
-    setState: setContributors,
-    ifNotFromStorage: () => setLocalStorage('current-contributors', null),
-  });
-
-  useOnCurrentRepoChange('current-contributors', (currentRepo) =>
-    contributorsFetchingData.fetching(
-      currentRepo?.owner.login,
-      currentRepo.name
-    )
-  );
-
-  const addContributor = (user: IUser) => {
-    setContributors((prevList) => prevList && [...prevList, user]);
-  };
-
-  const removeContributor = (user: IUser) => {
-    setContributors(
-      (prevList) =>
-        prevList &&
-        prevList.filter((currentUser) => currentUser.login !== user.login)
-    );
-  };
+  useEffect(() => {
+    return () => {
+      dispatch(setContributorsAction(null));
+    };
+  }, []);
 
   return {
     items: contributors,
-    isLoading: contributorsFetchingData.isLoading,
-    error: contributorsFetchingData.error,
-
-    fetching: contributorsFetchingData.fetching,
-    add: addContributor,
-    remove: removeContributor,
+    isLoading: isContributorsLoading,
+    error: error,
   };
 };
